@@ -1,27 +1,32 @@
 import csv
 import re
 import sys
+import os
 
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.pipeline import Pipeline
 from sklearn.tree import DecisionTreeClassifier
-from TextExtractedModificator import text_modificator
-from Abreviation_Slang import other_clean
-from Contractions import main_contraction
-from EmojiRemover import remove_emoji
-from NumberRemover import remove_number
-from URLRemover import remove_URL
+
+# Add parent directory to sys.path to import from utils
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from utils.TextExtractedModificator import text_modificator
+from utils.Abreviation_Slang import other_clean
+from utils.Contractions import main_contraction
+from utils.EmojiRemover import remove_emoji
+from utils.NumberRemover import remove_number
+from utils.URLRemover import remove_URL
 
 
 def prediction(TextExtracted):
     if TextExtracted == '':
         print('No text detected. Try to take a better picture or add some light to it.')
-        import textscanner
-        textscanner.textscanner()
+        # textscanner import is missing - commenting out for now
+        # import textscanner
+        # textscanner.textscanner()
     else:
         # transfer du doc csv
-        df = pd.read_csv('language-identification-datasets.csv')
+        df = pd.read_csv('../data/language-identification-datasets.csv')
         # division en 2 array pour text et language
         x = df['Text']
         y = df['Language']
@@ -53,7 +58,9 @@ def prediction(TextExtracted):
                 TextExtracted = input('Type the text you want to detect: ')
                 prediction(TextExtracted)
             else:
-                import textscanner
-                textscanner.textscanner()
-                import MLrecognition
-                MLrecognition.prediction(MLrecognition.TextExtracted)
+                # textscanner import is missing - commenting out for now
+                # import textscanner
+                # textscanner.textscanner()
+                # import MLrecognition
+                # MLrecognition.prediction(MLrecognition.TextExtracted)
+                print("Textscanner functionality not available - please implement textscanner module")

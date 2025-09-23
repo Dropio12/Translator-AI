@@ -6,7 +6,8 @@ import os
 
 
 def image_to_text(image):
-    pytesseract.pytesseract.tesseract_cmd = r'C:\Users\Strea\AppData\Local\Tesseract-OCR\tesseract.exe'
+    # Try to find tesseract executable automatically first
+    # pytesseract.pytesseract.tesseract_cmd = r'C:\Users\Strea\AppData\Local\Tesseract-OCR\tesseract.exe'
     # path to tesseract.exe
     # read the image
     img = cv2.imread(image)
