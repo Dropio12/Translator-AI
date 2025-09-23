@@ -1,6 +1,6 @@
-from src import MLrecognition
-from src.ExtractTextFromImg import image_to_text
-from src.Translator import Translate
+import MLrecognition
+from ExtractTextFromImg import image_to_text
+from Translator import Translate
 import os
 import sys
 

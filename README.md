@@ -51,8 +51,14 @@ Translator-AI/
 
 - Python 3.6+
 - Tesseract OCR engine
-- Required Python packages (install via pip):
 
+### Install Python Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Or install packages individually:
 ```bash
 pip install opencv-python
 pip install pytesseract
