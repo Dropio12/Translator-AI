@@ -45,6 +45,10 @@ You need JDK 17 or newer and the Android SDK with platform 36 and build tools 36
 
 `installDebug` needs a phone or an emulator connected. On Windows, use `gradlew.bat`.
 
+## Tests
+
+`./gradlew testDebugUnitTest` runs the JUnit tests of the `domain` package: box geometry, text fitting, patch colors, language codes, photo scaling, and the detect then translate flow with a fake detector and translator. The ML Kit and camera code is not covered by automated tests, and this version has not been tried on a phone or an emulator yet.
+
 ## What it assumes
 
 - Android 9 (API 28) or newer.
