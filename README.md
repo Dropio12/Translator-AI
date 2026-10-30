@@ -1,147 +1,59 @@
-# Translator-AI
+# Translator AI
 
-A Python-based AI translator application that extracts text from images and provides language detection and translation capabilities.
+An Android app that reads the words in a photo, finds out which language they are in, and translates them into the language you pick. The translation is drawn on the photo, in the place of the original words.
 
-## Project Structure
+Everything runs on the phone. There is no large language model and no paid API.
+
+## What it does
+
+- Get an image: take a photo with the camera, pick one from the gallery, or open the sample (a French menu made for this repo).
+- Live mode: point the camera at some text and the translations are drawn over the camera preview.
+- Each block of text gets a patch in the color of the background around it, and the translation is written on the patch, as big as fits. Tilted text gets a tilted patch.
+- A switch shows the original photo again. Under the photo, a list shows each original block and its translation.
+- You pick the target language. The source language is detected, or you can pick it yourself.
+
+## How it works
+
+1. **Read the text.** [ML Kit Text Recognition](https://developers.google.com/ml-kit/vision/text-recognition/v2/android) finds the blocks of text and the 4 corners of each block. The app uses the bundled Latin model, so it does not need Google Play services.
+2. **Detect the language.** [ML Kit Language Identification](https://developers.google.com/ml-kit/language/identification/android) looks at all the text of the image at once. One short word is hard to identify, a whole sign is easier.
+3. **Translate.** [ML Kit on-device Translation](https://developers.google.com/ml-kit/language/translation/android) translates each block. The first time a language is used, its model is downloaded and the app says so. After that, translation works offline.
+
+Then the app draws the result. The 4 corners of a block give a box with a center, a size and an angle. The font size is the biggest one that still fits the box, found with a binary search. Lines break between words, or between characters for languages written without spaces (Chinese, Japanese, Thai). The patch color is the median color of a thin ring of pixels just outside the block.
+
+## Code layout
 
 ```
-Translator-AI/
-├── src/                    # Main source code
-│   ├── main.py            # Application entry point
-│   ├── MLrecognition.py   # Machine learning language recognition
-│   ├── Translator.py      # Translation functionality
-│   ├── ExtractTextFromImg.py  # Text extraction from images
-│   ├── frontends.py       # Frontend UI implementation
-│   └── d.py               # Additional UI components
-├── utils/                 # Utility functions and text processing
-│   ├── TextExtractedModificator.py  # Text modification pipeline
-│   ├── Abreviation_Slang.py        # Abbreviation and slang processing
-│   ├── Contractions.py             # Contraction expansion
-│   ├── EmojiRemover.py             # Emoji removal
-│   ├── LowerCaracter.py            # Text lowercasing
-│   ├── NumberRemover.py            # Number removal
-│   ├── NumberRemoverForText.py     # Text-specific number removal
-│   ├── PunctuationRemover.py       # Punctuation removal
-│   └── URLRemover.py               # URL removal
-├── data/                  # Datasets and sample images
-│   ├── dataset.csv
-│   ├── language-identification-datasets.csv
-│   ├── ImageWithText.jpg
-│   ├── IMG.png
-│   └── IMG_20221113_114712.png
-├── assets/                # UI assets
-│   └── frontend.kv        # Kivy UI layout file
-├── models/                # Machine learning models (empty)
-├── tests/                 # Unit and integration tests (empty)
-├── docs/                  # Documentation (empty)
-└── README.md             # This file
+app/src/main/java/io/github/dropio12/translatorai/
+  domain/  plain Kotlin, no Android code: box geometry, text fitting, patch colors,
+           language codes, and the detect then translate flow (a Kotlin Flow)
+  data/    ML Kit and CameraX: text reader, language detector, translator,
+           image loading, live camera analyzer
+  ui/      Jetpack Compose screens, the overlay, and the ViewModel
+app/src/test/  JUnit tests for the domain package
 ```
 
-## Features
+Stack: Kotlin 2.4, Jetpack Compose with Material 3, Kotlin coroutines and Flow, CameraX 1.6, ML Kit, Android Gradle Plugin 9.5, Gradle 9.8.
 
-- **Image Text Extraction**: Extract text from images using OCR (Optical Character Recognition)
-- **Language Detection**: Automatically detect the language of extracted text using machine learning
-- **Translation**: Translate text to different languages
-- **GUI Interface**: User-friendly interface built with Kivy/KivyMD
-- **Text Processing**: Comprehensive text cleaning and preprocessing utilities
+## Build and run
 
-## Installation
+You need JDK 17 or newer and the Android SDK with platform 36 and build tools 36.1.0. Point Gradle to the SDK with `ANDROID_HOME` or a `local.properties` file containing `sdk.dir=/path/to/Android/Sdk`.
 
-### Prerequisites
-
-- Python 3.6+
-- Tesseract OCR engine
-
-### Install Python Dependencies
-
-```bash
-pip install -r requirements.txt
+```
+./gradlew assembleDebug testDebugUnitTest
+./gradlew installDebug
 ```
 
-Or install packages individually:
-```bash
-pip install opencv-python
-pip install pytesseract
-pip install pandas
-pip install scikit-learn
-pip install googletrans==3.1.0a0
-pip install kivy
-pip install kivymd
-pip install pillow
-```
+`installDebug` needs a phone or an emulator connected. On Windows, use `gradlew.bat`.
 
-### Tesseract Installation
+## What it assumes
 
-#### Windows
-Download and install Tesseract from: https://github.com/UB-Mannheim/tesseract/wiki
+- Android 9 (API 28) or newer.
+- Text written in the Latin alphabet (English, French, Spanish, German and so on). Other alphabets would need the other ML Kit text recognition models.
+- An internet connection the first time each language is used, to download its translation model.
+- One language per image: the language is detected on all the text together.
+- Translations come from ML Kit's on-device models, which Google describes as meant for casual and simple translations.
+- In live mode the app does not have the camera pixels, so the patches are dark instead of matching the background, and they are drawn from the last frame that finished, so they can trail a moving camera a little.
 
-#### Linux (Ubuntu/Debian)
-```bash
-sudo apt-get install tesseract-ocr
-```
+## History
 
-#### macOS
-```bash
-brew install tesseract
-```
-
-## Usage
-
-### Command Line
-Run the main application:
-```bash
-cd src/
-python main.py
-```
-
-### GUI Application
-Run the GUI frontend:
-```bash
-cd src/
-python frontends.py
-```
-
-## How It Works
-
-1. **Text Extraction**: The application uses OpenCV and Tesseract to extract text from images
-2. **Text Processing**: Raw extracted text is cleaned using various utility functions:
-   - Convert to lowercase
-   - Remove URLs, numbers, punctuation
-   - Remove emojis
-   - Expand contractions
-   - Process abbreviations and slang
-3. **Language Detection**: Uses machine learning (Decision Tree Classifier) to identify the language
-4. **Translation**: Uses Google Translate API to translate text to the target language
-
-## Configuration
-
-- Update the Tesseract executable path in `src/ExtractTextFromImg.py` if needed
-- Modify language datasets in the `data/` directory
-- Customize UI layouts in `assets/frontend.kv`
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Add your changes
-4. Add tests in the `tests/` directory
-5. Submit a pull request
-
-## License
-
-This project is open source. Please check the repository for license details.
-
-## Known Issues
-
-- `textscanner.py` module is referenced but not present in the codebase
-- Hardcoded Tesseract path may need adjustment for different systems
-- Some imports may need adjustment based on your Python environment
-
-## Future Enhancements
-
-- Add comprehensive unit tests
-- Implement the missing `textscanner` module
-- Add support for more image formats
-- Improve language detection accuracy
-- Add more translation services
-- Containerize the application
+The first version (2022) was a Python and Kivy app that used OpenCV, Tesseract, a scikit-learn language model and googletrans. It is kept at the tag `v0-python`.
