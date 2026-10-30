@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Translator AI</string>
+
+    <string name="home_empty">Take a photo of a sign or a menu, or pick one from your gallery. The words on it are read, translated and drawn back in place, all on the phone.</string>
+    <string name="action_camera">Camera</string>
+    <string name="action_live">Live</string>
+    <string name="action_gallery">Gallery</string>
+    <string name="action_sample">Sample</string>
+
+    <string name="from_label">From: %1$s</string>
+    <string name="to_label">To: %1$s</string>
+    <string name="auto_detect">Auto detect</string>
+    <string name="show_original">Show original</string>
+    <string name="list_title">Original and translation</string>
+
+    <string name="status_reading">Reading the text…</string>
+    <string name="status_detecting">Detecting the language…</string>
+    <string name="status_downloading">Downloading the %1$s and %2$s language packs. This happens only the first time.</string>
+    <string name="status_translating">Translating block %1$d of %2$d…</string>
+    <string name="status_done_detected">Detected %1$s. Translated to %2$s.</string>
+    <string name="status_done_chosen">Translated from %1$s to %2$s.</string>
+    <string name="status_same_language">The text is already in %1$s.</string>
+    <string name="status_no_text">No text found. Try again with the words large and sharp in the frame.</string>
+    <string name="status_unknown_language">Could not tell the language. Pick it with the From button.</string>
+    <string name="status_download_failed">Could not download the language pack. Check the internet connection and try again.</string>
+    <string name="status_failed">Could not read this image.</string>
+    <string name="try_again">Try again</string>
+    <string name="status_camera_denied">The camera permission is needed to take a photo.</string>
+
+    <string name="live_hint">Point the camera at some text.</string>
+    <string name="take_photo">Take photo</string>
+    <string name="close">Close</string>
+    <string name="image_description">The photo with the translated text drawn over the original words</string>
+</resources>

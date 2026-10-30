@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A photo frame with two lines of text; the second line is covered by a patch, like the app does. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M36,34 L72,34 Q76,34 76,38 L76,70 Q76,74 72,74 L36,74 Q32,74 32,70 L32,38 Q32,34 36,34 Z"
+        android:strokeWidth="3"
+        android:strokeColor="#FFFFFF" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M39,43 L69,43 L69,48 L39,48 Z" />
+    <path
+        android:fillColor="#F2B705"
+        android:pathData="M38,55 L70,55 L70,66 L38,66 Z" />
+    <path
+        android:fillColor="#1F5FAF"
+        android:pathData="M42,59 L66,59 L66,62 L42,62 Z" />
+</vector>
